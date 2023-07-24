@@ -94,7 +94,7 @@ class Player {
             playerRect.left < obstacleRect.right &&
             playerRect.right > obstacleRect.left &&
             playerRect.top < obstacleRect.bottom &&
-            playerRect.bottom > obstacle.top
+            playerRect.bottom - 20 > obstacle.top
         ) {
             return true;
         } else {
