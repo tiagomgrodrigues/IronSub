@@ -20,16 +20,26 @@ class Game {
             400 /* y position of the player */,
             100 /* length of the player */,
             50 /* width of the player */,
-            "./images/sub.png"
+            "docs/images/sub.png"
         );
 
-        // <3>
+        // fishes and hearts
+        this.fishes = [];
+
+        this.hearts = [];
+
         // obstacles
         this.rocks = [];
 
         this.skeletons = [];
 
-        // flag to give info about process of pushing an obstacle   ??????????????????
+        // flag to give info about process of pushing a fish
+        this.isPushingFish = false;
+
+        // flag to give info about process of pushing a heart
+        this.isPushingHeart = false;
+
+        // flag to give info about process of pushing an obstacle
         this.isPushingRock = false;
         this.isPushingSkeleton = false;
 
@@ -99,6 +109,77 @@ class Game {
 
         this.player.move();
 
+        console.log(this.skeletons.length);
+
+        // check for colision and if an obstacle is still on the screen
+        for (let i = 0; i < this.fishes.length; i++) {
+            const fish = this.fishes[i];
+            fish.move();
+
+            // check if the player collided with the object
+            if (this.player.didCollide(fish)) {
+                // remove the obstacle from the DOM
+                fish.element.remove();
+                // remove obstacle from the array
+                this.fishes.splice(i, 1);
+                // remove player's live by 1
+                this.score++;
+            }
+            // check if the obstacle is off the screen (at the left)
+            else if (fish.left < 0) {
+                // congratulations to you, you avoided one obstacle and won 1 live
+                this.lives--;
+
+                // remove the obstacle from the HTML
+                fish.element.remove();
+
+                // remove the obstcle from the array of obstacles
+                this.fishes.splice(i, 1);
+            }
+        }
+
+        // Update obstacles
+        if (!this.fishes.length && !this.isPushingFish) {
+            /* This condition checks if there are no obstacles present in the game and if the game is not currently in the process of pushing a new obstacle. If both conditions are true, it means there are no obstacles on the screen, and it's time to push a new obstacle into the game. */
+            this.isPushingFish = true; /*  the game is currently in the process of adding a new obstacle. This is done to prevent multiple simultaneous attempts to push obstacles and maintain control over when the obstacles are added. */
+            setTimeout(() => {
+                this.fishes.push(new Fish(this.gameScreen));
+                this.isPushingFish = false;
+            }, 500); /* 0.5 seconds */
+        }
+        //------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+        for (let i = 0; i < this.hearts.length; i++) {
+            const heart = this.hearts[i];
+            heart.move();
+
+            // check if the player collided with the object
+            if (this.player.didCollide(heart)) {
+                // remove the obstacle from the DOM
+                heart.element.remove();
+                // remove obstacle from the array
+                this.hearts.splice(i, 1);
+                // remove player's live by 1
+                this.lives++;
+            }
+            // check if the obstacle is off the screen (at the left)
+            else if (heart.left < 0) {
+                // remove the obstacle from the HTML
+                heart.element.remove();
+
+                // remove the obstcle from the array of obstacles
+                this.hearts.splice(i, 1);
+            }
+        }
+        // Update obstacles
+        if (!this.hearts.length && !this.isPushingHeart) {
+            this.isPushingHeart = true;
+            setTimeout(() => {
+                this.hearts.push(new Heart(this.gameScreen));
+                this.isPushingHeart = false;
+            }, 1500); /* 0.5 seconds */
+        }
+        //------------------------------------------------------------------------------------
         // check for colision and if an obstacle is still on the screen
         for (let i = 0; i < this.rocks.length; i++) {
             const rock = this.rocks[i];
@@ -163,17 +244,8 @@ class Game {
             }, timeRock); /* 0.5 seconds */
         }
 
-        let rSkeletonPos = 0;
         // Fish skeletons
         if (this.skeletons.length <= 3 && !this.isPushingSkeleton) {
-            rSkeletonPos = this.randomPosition();
-            while (
-                rSkeletonPos + 10 >
-                    this.skeletons[length - 1].Skeleton.position &&  ||
-                rSkeletonPos - 30 < this.skeletons[length - 1].Skeleton.position
-            ) {
-                rSkeletonPos = this.randomPosition();
-            }
             /* This condition checks if there are no obstacles present in the game and if the game is not currently in the process of pushing a new obstacle. If both conditions are true, it means there are no obstacles on the screen, and it's time to push a new obstacle into the game. */
             if (this.skeletons.length <= 3) {
                 this.isPushingSkeleton = true; /*  the game is currently in the process of adding a new obstacle. This is done to prevent multiple simultaneous attempts to push obstacles and maintain control over when the obstacles are added. */
@@ -181,11 +253,7 @@ class Game {
             let timeSkeleton = this.randomTime();
             setTimeout(() => {
                 this.skeletons.push(
-                    new Skeleton(
-                        this.gameScreen,
-                        this.randomSpeed(),
-                        rSkeletonPos
-                    )
+                    new Skeleton(this.gameScreen, this.randomSpeed())
                 );
                 this.isPushingSkeleton = false;
             }, timeSkeleton); /* 0.5 seconds */
@@ -197,6 +265,10 @@ class Game {
     endGame() {
         // remove the player element from the DOM
         this.player.element.remove();
+        this.fishes.forEach((fish) => {
+            // remove from the HTML
+            fish.element.remove();
+        });
         // remove all rocks from the array of rocks
         this.rocks.forEach((rock) => {
             // remove from the HTML
@@ -236,4 +308,3 @@ class Game {
         );
     }
 }
-// </14>

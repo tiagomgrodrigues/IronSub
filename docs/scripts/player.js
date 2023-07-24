@@ -22,7 +22,7 @@ class Player {
         this.directionY = 0;
 
         // Limit the vertical movement within half of the screen's height
-        this.bottomBoundary = gameScreen.offsetHeight / 2;
+        this.bottomBoundary = 150;
 
         // create the image tag for the player, define src and do default styling
         this.element = document.createElement("img");

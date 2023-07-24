@@ -1,0 +1,98 @@
+body {
+    padding: 0;
+    text-align: center;
+}
+
+#game-intro {
+    padding: 20px 0px;
+}
+
+#game-container {
+    display: flex;
+    width: 100%; /* with of the game */
+    height: auto;
+    padding: 20px 0px; /* 20px down */
+    justify-content: center;
+}
+
+#game-screen {
+    display: none;
+    align-content: center;
+    padding: 20px 0px;
+    overflow: hidden;
+    position: relative;
+    background-image: url(../images/wave.png);
+    background-size: 200% 100%;
+    background-position: 0 0;
+    animation: slide-horizontal 5s steps(1000) infinite;
+}
+
+@keyframes slide-horizontal {
+    /* animation of the screen in the horizontal plane */
+    100% {
+        background-position: -1000px 0;
+    }
+}
+
+#game-end {
+    display: none;
+    position: absolute;
+    top: 0;
+}
+
+.game-intro p {
+    font-size: 18px;
+    font-family: "Verdana";
+}
+
+.end-img {
+    width: 90%;
+    height: auto;
+    padding-left: 23%;
+    padding-top: 20px;
+}
+
+.intro-img {
+    width: 80%;
+    height: auto;
+    padding-left: 50px;
+    padding-top: 20px;
+}
+
+#game-intro button {
+    position: absolute;
+    top: 45%;
+    left: 43%;
+    padding: 5px 10px;
+    background: #727272;
+    color: rgb(247, 247, 247);
+    width: 12%;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.8);
+    font-size: 1rem;
+    letter-spacing: 0.025em;
+    border: 2px solid rgba(0, 0, 0, 1);
+    box-shadow: inset 3px 3px 0 rgba(255, 255, 255, 0.5),
+        inset -3px -3px 0 rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+#game-end button {
+    position: absolute;
+    top: 93%;
+    left: 50%;
+    padding: 5px 10px;
+    background: #727272;
+    color: rgb(247, 247, 247);
+    width: 30%;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.8);
+    font-size: 1rem;
+    letter-spacing: 0.025em;
+    border: 2px solid rgba(0, 0, 0, 1);
+    box-shadow: inset 3px 3px 0 rgba(255, 255, 255, 0.5),
+        inset -3px -3px 0 rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+.btn-game:hover {
+    background: rgb(255, 62, 9);
+}

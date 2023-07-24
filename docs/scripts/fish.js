@@ -1,20 +1,20 @@
-class Rock {
-    constructor(gameScreen, speed) {
+// <12>
+class Fish {
+    constructor(gameScreen) {
         this.gameScreen = gameScreen;
-        this.speed = speed;
 
         this.left = this.gameScreen.offsetWidth;
         this.top =
             Math.floor(
                 Math.random() * (this.gameScreen.offsetHeight / 2 - 50)
-            ) +
-            this.gameScreen.offsetHeight / 2;
-        this.width = 30;
-        this.height = 30;
+            ) + 150;
+        // + 150 means that is 150 from the top to the bottom
+        this.width = 40;
+        this.height = 40;
 
-        // create tge HTML element and default styling
+        // create the HTML element and default styling
         this.element = document.createElement("img");
-        this.element.src = "./images/rock.png";
+        this.element.src = "docs/images/fish.png";
         this.element.style.position = "absolute";
         this.element.style.top = `${this.top}px`;
         this.element.style.left = `${this.left}px`;
@@ -31,7 +31,8 @@ class Rock {
 
     move() {
         // Drop the obstacle 3px to the bottom
-        this.left -= this.speed;
+        this.left -= 3;
         this.updatePosition();
     }
 }
+// </12>
