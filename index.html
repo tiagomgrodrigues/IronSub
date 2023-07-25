@@ -5,36 +5,47 @@
         <meta name="viewport" content="width=device-width, initial-scale=1.0" />
         <meta http-equiv="X-UA-Compatible" content="ie=edge" />
         <link rel="stylesheet" href="docs/styles/style.css" />
+        <link href="https://db.onlinewebfonts.com/c/4c19fc875e7ba1e6831129de3ab5ac0b?family=Retro+Gaming" rel="stylesheet">
         <title>Fisherman</title>
     </head>
     <body>
+
         <!-- Show on start screen -->
         <div id="game-intro">
-            <img src="docs/images/deep-ocean-1.jpg" alt="" class="intro-img" />
-            <br />
-            <button id="start-button" class="btn-game">Start Game</button>
+          <div class="intro-container">
+              <h1> SUBFISH&FIRE</h1>
+            <button id="start-button">START GAME</button>
+            <a href="controls.html">
+              <button id="controls-button">CONTROLS</button>
+            </a>
+            <a href="credits.html">
+            <button id="credits-button">CREDITS</button>
+            </a>
+          </div>      
         </div>
 
         <div id="game-container">
-            <div>
-              <h2>Stats</h2>
-              <p>Score: <span id="score">0</span></p>
-              <p>Lives: <span id="lives">3</span></p>
-            </div>
+          <div id="status">
+            <p>SCORE: <span id="score">0</span></p>
+            <h1>STATS</h1>
+            <p>LIVES: <span id="lives">3</span></p>
+          </div>
               <!-- #game-screen is initially hidden using CSS style display: none  -->
-            <div id="game-screen"></div>
+          <div id="game-screen"></div>
+            
           </div>
         
         <!-- #game-end is initially hidden using CSS style display: none -->
         <div id="game-end">
+          <div class="end-container">
+            <button id="restart-button">HOME SCREEN</button>
+          </div>
+          <!--
           <img src="docs/images/game-over.jpg" alt="" class="end-img" />
+          -->
           
-          <br />
-          <button id="restart-button">Restart</button>
       </div>
     </main>
-
-        <!-- <12> -->
         <script type="text/javascript" src="docs/scripts/fish.js"></script>
         <script type="text/javascript" src="docs/scripts/heart.js"></script>
         <script type="text/javascript" src="docs/scripts/skeleton.js"></script>
@@ -42,6 +53,5 @@
         <script type="text/javascript" src="docs/scripts/player.js"></script>
         <script type="text/javascript" src="docs/scripts/game.js"></script>
         <script type="text/javascript" src="docs/scripts/script.js"></script>
-        <!-- </12> -->
     </body>
 </html>

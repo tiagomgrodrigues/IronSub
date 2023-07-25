@@ -1,5 +1,4 @@
 class Game {
-    // <2>
     // stores all properties to the future objects
     constructor() {
         // get all the possible screens
@@ -7,19 +6,19 @@ class Game {
         this.startScreen = document.getElementById("game-intro");
         this.gameScreen = document.getElementById("game-screen");
         this.gameEndScreen = document.getElementById("game-end");
+        this.statusScreen = document.getElementById("status");
 
         // style for the game board
-        this.width = 1000; /* width of the animation */
-        this.height = 600;
-        // </2>
+        this.width = 900; /* width of the animation */
+        this.height = 410;
 
         // property of the player
         this.player = new Player(
             this.gameScreen,
             100 /* x position of the player */,
             400 /* y position of the player */,
-            100 /* length of the player */,
-            50 /* width of the player */,
+            60 /* length of the player */,
+            30 /* width of the player */,
             "docs/images/sub.png"
         );
 
@@ -47,11 +46,10 @@ class Game {
         this.score = 0;
 
         // lives
-        this.lives = 3;
+        this.lives = 5;
 
         // gameOver flag
         this.gameOver = false;
-        // </3>
     }
 
     // <4> start() Initializes the game by executing the following sequence of steps when called:
@@ -62,18 +60,21 @@ class Game {
 
         // hide the start screen
         this.startScreen.style.display = "none";
+        // Hide status
+        this.statusScreen.style.display = "none";
 
         // show the game screen
-        this.gameScreen.style.display = "block";
+        this.gameScreen.style.display = "flex";
+        // show the status
+        this.statusScreen.style.display = "flex";
 
         // start the game loop
         this.gameLoop();
     }
-    // </4>
 
-    // <5> gameLoop() Runs the game loop by executing the following steps:
+    // gameLoop() Runs the game loop by executing the following steps:
     gameLoop() {
-        console.log("Game Loop");
+        // console.log("Game Loop");
 
         // Check if the game is over to interrupt the game loop
         if (this.gameIsOver) {
@@ -87,8 +88,6 @@ class Game {
         // requestAnimationFrame is a JS method that updates information of your screen
         window.requestAnimationFrame(() => this.gameLoop());
     }
-
-    // </5>
 
     // <13> update() This method is responsible for updating the game state during each loop iteration. For now, we will leave it empty and come back to implement it in the upcoming iterations.
     update() {
@@ -108,8 +107,6 @@ class Game {
         }
 
         this.player.move();
-
-        console.log(this.skeletons.length);
 
         // check for colision and if an obstacle is still on the screen
         for (let i = 0; i < this.fishes.length; i++) {
@@ -177,7 +174,7 @@ class Game {
             setTimeout(() => {
                 this.hearts.push(new Heart(this.gameScreen));
                 this.isPushingHeart = false;
-            }, 1500); /* 0.5 seconds */
+            }, 15000); /* 0.5 seconds */
         }
         //------------------------------------------------------------------------------------
         // check for colision and if an obstacle is still on the screen
@@ -193,7 +190,6 @@ class Game {
                 this.rocks.splice(i, 1);
                 // remove player's live by 1
                 this.lives--;
-
                 // check if the obstacle is off the screen (at the left)
             } else if (rock.left < 0) {
                 // congratulations to you, you avoided one obstacle and won 1 live
@@ -237,9 +233,11 @@ class Game {
         if (!this.rocks.length && !this.isPushingRock) {
             /* This condition checks if there are no obstacles present in the game and if the game is not currently in the process of pushing a new obstacle. If both conditions are true, it means there are no obstacles on the screen, and it's time to push a new obstacle into the game. */
             this.isPushingRock = true; /*  the game is currently in the process of adding a new obstacle. This is done to prevent multiple simultaneous attempts to push obstacles and maintain control over when the obstacles are added. */
-            let timeRock = this.randomTime();
+            let timeRock = this.randomTime(2500, 300);
             setTimeout(() => {
-                this.rocks.push(new Rock(this.gameScreen, this.randomSpeed()));
+                this.rocks.push(
+                    new Rock(this.gameScreen, this.randomSpeed(6, 3))
+                );
                 this.isPushingRock = false;
             }, timeRock); /* 0.5 seconds */
         }
@@ -250,18 +248,16 @@ class Game {
             if (this.skeletons.length <= 3) {
                 this.isPushingSkeleton = true; /*  the game is currently in the process of adding a new obstacle. This is done to prevent multiple simultaneous attempts to push obstacles and maintain control over when the obstacles are added. */
             }
-            let timeSkeleton = this.randomTime();
+            let timeSkeleton = this.randomTime(2500, 300);
             setTimeout(() => {
                 this.skeletons.push(
-                    new Skeleton(this.gameScreen, this.randomSpeed())
+                    new Skeleton(this.gameScreen, this.randomSpeed(6, 3))
                 );
                 this.isPushingSkeleton = false;
             }, timeSkeleton); /* 0.5 seconds */
         }
     }
-    // </13>
 
-    // <14>
     endGame() {
         // remove the player element from the DOM
         this.player.element.remove();
@@ -287,15 +283,15 @@ class Game {
         this.gameScreen.style.display = "none";
 
         // show end game screen
-        this.gameEndScreen.style.display = "block";
+        this.gameEndScreen.style.display = "flex";
     }
 
-    randomTime() {
-        return Math.floor(Math.random() * (2500 - 300 + 1) + 300);
+    randomTime(maxTime, minTime) {
+        return Math.floor(Math.random() * (maxTime - minTime + 1) + minTime);
     }
 
-    randomSpeed() {
-        return Math.floor(Math.random() * (6 - 3 + 1) + 3);
+    randomSpeed(maxSpeed, minSpeed) {
+        return Math.floor(Math.random() * (maxSpeed - minSpeed + 1) + minSpeed);
     }
 
     // alterar aqui

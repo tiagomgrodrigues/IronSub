@@ -22,7 +22,7 @@ class Player {
         this.directionY = 0;
 
         // Limit the vertical movement within half of the screen's height
-        this.bottomBoundary = 150;
+        this.bottomBoundary = 90;
 
         // create the image tag for the player, define src and do default styling
         this.element = document.createElement("img");
@@ -94,8 +94,9 @@ class Player {
             playerRect.left < obstacleRect.right &&
             playerRect.right > obstacleRect.left &&
             playerRect.top < obstacleRect.bottom &&
-            playerRect.bottom - 20 > obstacle.top
+            playerRect.bottom > obstacleRect.top
         ) {
+            console.log(playerRect, obstacleRect);
             return true;
         } else {
             return false;
