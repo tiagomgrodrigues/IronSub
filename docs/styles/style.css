@@ -37,6 +37,21 @@ body {
     animation: slide-horizontal 5s steps(1000) infinite;
 }
 
+#game-screen-2 {
+    display: none;
+    justify-content: center;
+    background-size: cover;
+    margin-left: 1%;
+    margin-top: 4%;
+    border: 3px solid #01adee;
+    /* GAME SCREEN */
+    overflow: hidden;
+    position: relative;
+    background-image: url(../images/sea.png);
+    background-size: 200% 100%;
+    animation: slide-horizontal 5s steps(1300) infinite;
+}
+
 #status {
     display: none;
     flex-direction: row;
@@ -57,11 +72,9 @@ body {
 @keyframes slide-horizontal {
     /* animation of the screen in the horizontal plane */
     100% {
-        background-position: -1100px 0;
+        background-position: -2000px 0;
     }
-    0% {
-        background-position: 0px 0;
-    }
+
 }
 
 .intro-container {

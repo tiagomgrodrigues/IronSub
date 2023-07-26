@@ -12,6 +12,8 @@ class Game {
         this.width = 900; /* width of the animation */
         this.height = 410;
 
+        this.gameVersion = "single";
+
         // property of the player
         this.player = new Player(
             this.gameScreen,
@@ -22,6 +24,9 @@ class Game {
             "docs/images/sub.png"
         );
 
+
+        this.player2 = null;
+
         // fishes and hearts
         this.fishes = [];
 
@@ -31,6 +36,8 @@ class Game {
         this.rocks = [];
 
         this.skeletons = [];
+
+        
 
         // flag to give info about process of pushing a fish
         this.isPushingFish = false;
@@ -60,14 +67,19 @@ class Game {
 
         // hide the start screen
         this.startScreen.style.display = "none";
-        // Hide status
-        this.statusScreen.style.display = "none";
 
         // show the game screen
-        this.gameScreen.style.display = "flex";
-        // show the status
-        this.statusScreen.style.display = "flex";
-
+        this.gameScreen.style.display = "block";
+        if(this.gameVersion == "multiplayer"){
+            this.player2  = new Player(
+                this.gameScreen,
+                100 /* x position of the player */,
+                100 /* y position of the player */,
+                100 /* length of the player */,
+                50 /* width of the player */,
+                "docs/images/sub2.png"
+            );
+        }
         // start the game loop
         this.gameLoop();
     }
@@ -93,20 +105,21 @@ class Game {
     update() {
         // Bonus: scores and lives
         let score = document.getElementById("score");
-        let lives =
-            document.getElementById(
-                "lives"
-            ); /* These lines fetch the HTML elements with IDs "score" and "lives" from the document */
+        let lives = document.getElementById("lives"); /* These lines fetch the HTML elements with IDs "score" and "lives" from the document */
 
         score.innerHTML = this.score;
-        lives.innerHTML =
-            this.lives; /* These lines update the contents (innerHTML) of the "score" and "lives" elements with the current values of this.score and this.lives, respectively. */
+        lives.innerHTML = this.lives; /* These lines update the contents (innerHTML) of the "score" and "lives" elements with the current values of this.score and this.lives, respectively. */
 
         if (this.lives === 0) {
             this.endGame();
         }
 
         this.player.move();
+
+        
+        if(this.player2){
+            this.player2.move();
+        }
 
         // check for colision and if an obstacle is still on the screen
         for (let i = 0; i < this.fishes.length; i++) {
@@ -122,6 +135,18 @@ class Game {
                 // remove player's live by 1
                 this.score++;
             }
+
+            if(this.player2){
+                if (this.player2.didCollide(fish)) {
+                    // remove the obstacle from the DOM
+                    fish.element.remove();
+                    // remove obstacle from the array
+                    this.fishes.splice(i, 1);
+                    // remove player's live by 1
+                    this.score++;
+                }
+            }
+
             // check if the obstacle is off the screen (at the left)
             else if (fish.left < 0) {
                 // congratulations to you, you avoided one obstacle and won 1 live
@@ -159,6 +184,18 @@ class Game {
                 // remove player's live by 1
                 this.lives++;
             }
+
+            if(this.player2){
+                if (this.player2.didCollide(heart)) {
+                    // remove the obstacle from the DOM
+                    heart.element.remove();
+                    // remove obstacle from the array
+                    this.hearts.splice(i, 1);
+                    // remove player's live by 1
+                    this.lives++;
+                }
+            }
+
             // check if the obstacle is off the screen (at the left)
             else if (heart.left < 0) {
                 // remove the obstacle from the HTML
@@ -168,6 +205,7 @@ class Game {
                 this.hearts.splice(i, 1);
             }
         }
+
         // Update obstacles
         if (!this.hearts.length && !this.isPushingHeart) {
             this.isPushingHeart = true;
@@ -190,12 +228,25 @@ class Game {
                 this.rocks.splice(i, 1);
                 // remove player's live by 1
                 this.lives--;
-                // check if the obstacle is off the screen (at the left)
-            } else if (rock.left < 0) {
-                // congratulations to you, you avoided one obstacle and won 1 live
-                //this.score++;
+            }
 
-                // remove the obstacle from the HTML
+            if(this.player2){
+                if (this.player2.didCollide(rock)) {
+                    // remove the rock from the DOM
+                    rock.element.remove();
+                    // remove rock from the array
+                    this.rocks.splice(i, 1);
+                    // remove player's live by 1
+                    this.lives--;
+                }
+            }
+
+            // check if the obstacle is off the screen (at the left)
+            else if (rock.left < 0) {
+            // congratulations to you, you avoided one obstacle and won 1 live
+            //this.score++;
+
+            // remove the obstacle from the HTML
                 rock.element.remove();
 
                 // remove the obstcle from the array of obstacles
@@ -215,7 +266,20 @@ class Game {
                 this.skeletons.splice(i, 1);
                 // remove player's live by 1
                 this.lives--;
-            } else if (skeleton.left < 0) {
+            }
+
+            if(this.player2){
+                if (this.player2.didCollide(skeleton)) {
+                    // remove the rock from the DOM
+                    skeleton.element.remove();
+                    // remove rock from the array
+                    this.skeletons.splice(i, 1);
+                    // remove player's live by 1
+                    this.lives--;
+                } 
+            }
+
+            else if (skeleton.left < 0) {
                 // congratulations to you, you avoided one obstacle and won 1 live
                 //this.score++;
 
@@ -236,8 +300,7 @@ class Game {
             let timeRock = this.randomTime(2500, 300);
             setTimeout(() => {
                 this.rocks.push(
-                    new Rock(this.gameScreen, this.randomSpeed(6, 3))
-                );
+                    new Rock(this.gameScreen, this.randomSpeed(6, 3)));
                 this.isPushingRock = false;
             }, timeRock); /* 0.5 seconds */
         }
@@ -261,10 +324,16 @@ class Game {
     endGame() {
         // remove the player element from the DOM
         this.player.element.remove();
+        if(this.player2){
+            this.player2.element.remove();
+        }
+
+        this.player.element.remove();
         this.fishes.forEach((fish) => {
             // remove from the HTML
             fish.element.remove();
         });
+
         // remove all rocks from the array of rocks
         this.rocks.forEach((rock) => {
             // remove from the HTML
