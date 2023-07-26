@@ -26,29 +26,15 @@ body {
     display: none;
     justify-content: center;
     background-size: cover;
-    margin-left: 1%;
-    margin-top: 4%;
+    margin-left: 0.5%;
+    margin-top: 5%;
     border: 3px solid #01adee;
+    border-radius: 15px;
     /* GAME SCREEN */
     overflow: hidden;
     position: relative;
     background-image: url(../images/sea.png);
     background-size: 100% 100%;
-    animation: slide-horizontal 5s steps(1000) infinite;
-}
-
-#game-screen-2 {
-    display: none;
-    justify-content: center;
-    background-size: cover;
-    margin-left: 1%;
-    margin-top: 4%;
-    border: 3px solid #01adee;
-    /* GAME SCREEN */
-    overflow: hidden;
-    position: relative;
-    background-image: url(../images/sea.png);
-    background-size: 200% 100%;
     animation: slide-horizontal 5s steps(1300) infinite;
 }
 
@@ -74,7 +60,6 @@ body {
     100% {
         background-position: -2000px 0;
     }
-
 }
 
 .intro-container {
@@ -85,7 +70,7 @@ body {
     background-size: cover;
     background-repeat: no-repeat;
     margin-top: 12%;
-    margin-left: 1%;
+    margin-left: 0.5%;
     width: 60%;
     height: 400px;
     border: 3px solid #01adee;
@@ -116,7 +101,7 @@ body {
 #start-button {
     position: absolute;
     top: 72%;
-    left: 30%;
+    left: 23%;
     padding: 5px 10px;
     background: #727272;
     color: rgb(247, 247, 247);
@@ -131,6 +116,27 @@ body {
 }
 
 #start-button:hover {
+    background: rgb(255, 62, 9);
+}
+
+#start-button-2 {
+    position: absolute;
+    top: 72%;
+    left: 37%;
+    padding: 5px 10px;
+    background: #727272;
+    color: rgb(247, 247, 247);
+    width: 12%;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.8);
+    font-size: 1rem;
+    letter-spacing: 0.025em;
+    border: 2px solid rgba(0, 0, 0, 1);
+    box-shadow: inset 3px 3px 0 rgba(255, 255, 255, 0.5),
+        inset -3px -3px 0 rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+#start-button-2:hover {
     background: rgb(255, 62, 9);
 }
 
@@ -158,7 +164,7 @@ body {
 #controls-button {
     position: absolute;
     top: 72%;
-    left: 45%;
+    left: 51%;
     padding: 5px 10px;
     background: #727272;
     color: rgb(247, 247, 247);
@@ -179,7 +185,7 @@ body {
 #credits-button {
     position: absolute;
     top: 72%;
-    left: 60%;
+    left: 65%;
     padding: 5px 10px;
     background: #727272;
     color: rgb(247, 247, 247);
@@ -194,6 +200,27 @@ body {
 }
 
 #credits-button:hover {
+    background: rgb(255, 62, 9);
+}
+
+#back-button {
+    position: absolute;
+    top: 72%;
+    left: 45%;
+    padding: 5px 10px;
+    background: #727272;
+    color: rgb(247, 247, 247);
+    width: 12%;
+    text-shadow: 2px 2px 0 rgba(0, 0, 0, 0.8);
+    font-size: 1rem;
+    letter-spacing: 0.025em;
+    border: 2px solid rgba(0, 0, 0, 1);
+    box-shadow: inset 3px 3px 0 rgba(255, 255, 255, 0.5),
+        inset -3px -3px 0 rgba(0, 0, 0, 0.5);
+    cursor: pointer;
+}
+
+#back-button:hover {
     background: rgb(255, 62, 9);
 }
 

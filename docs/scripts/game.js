@@ -18,12 +18,11 @@ class Game {
         this.player = new Player(
             this.gameScreen,
             100 /* x position of the player */,
-            400 /* y position of the player */,
+            200 /* y position of the player */,
             60 /* length of the player */,
             30 /* width of the player */,
             "docs/images/sub.png"
         );
-
 
         this.player2 = null;
 
@@ -37,8 +36,6 @@ class Game {
 
         this.skeletons = [];
 
-        
-
         // flag to give info about process of pushing a fish
         this.isPushingFish = false;
 
@@ -48,12 +45,6 @@ class Game {
         // flag to give info about process of pushing an obstacle
         this.isPushingRock = false;
         this.isPushingSkeleton = false;
-
-        // score
-        this.score = 0;
-
-        // lives
-        this.lives = 5;
 
         // gameOver flag
         this.gameOver = false;
@@ -67,19 +58,36 @@ class Game {
 
         // hide the start screen
         this.startScreen.style.display = "none";
+        // Hide status
+        this.statusScreen.style.display = "none";
+        // show the status
+        this.statusScreen.style.display = "flex";
 
         // show the game screen
-        this.gameScreen.style.display = "block";
-        if(this.gameVersion == "multiplayer"){
-            this.player2  = new Player(
+        this.gameScreen.style.display = "flex";
+        if (this.gameVersion == "multiplayer") {
+            this.player2 = new Player(
                 this.gameScreen,
                 100 /* x position of the player */,
                 100 /* y position of the player */,
-                100 /* length of the player */,
-                50 /* width of the player */,
+                60 /* length of the player */,
+                30 /* width of the player */,
                 "docs/images/sub2.png"
             );
         }
+
+        if (this.gameVersion == "multiplayer") {
+            // score
+            this.score = 0;
+            // lives
+            this.lives = 6;
+        } else {
+            // score
+            this.score = 0;
+            // lives
+            this.lives = 3;
+        }
+
         // start the game loop
         this.gameLoop();
     }
@@ -105,39 +113,36 @@ class Game {
     update() {
         // Bonus: scores and lives
         let score = document.getElementById("score");
-        let lives = document.getElementById("lives"); /* These lines fetch the HTML elements with IDs "score" and "lives" from the document */
+        let lives =
+            document.getElementById(
+                "lives"
+            ); /* These lines fetch the HTML elements with IDs "score" and "lives" from the document */
 
         score.innerHTML = this.score;
-        lives.innerHTML = this.lives; /* These lines update the contents (innerHTML) of the "score" and "lives" elements with the current values of this.score and this.lives, respectively. */
+        lives.innerHTML =
+            this.lives; /* These lines update the contents (innerHTML) of the "score" and "lives" elements with the current values of this.score and this.lives, respectively. */
 
         if (this.lives === 0) {
             this.endGame();
         }
 
-        this.player.move();
-
-        
-        if(this.player2){
+        // PLAYER 1 AND PLAYER 2
+        if (this.player2) {
+            // Move player 2
             this.player2.move();
-        }
+            // Move player 1
+            this.player.move();
 
-        // check for colision and if an obstacle is still on the screen
-        for (let i = 0; i < this.fishes.length; i++) {
-            const fish = this.fishes[i];
-            fish.move();
+            // FISHES
+            for (let i = 0; i < this.fishes.length; i++) {
+                const fish = this.fishes[i];
+                fish.move();
 
-            // check if the player collided with the object
-            if (this.player.didCollide(fish)) {
-                // remove the obstacle from the DOM
-                fish.element.remove();
-                // remove obstacle from the array
-                this.fishes.splice(i, 1);
-                // remove player's live by 1
-                this.score++;
-            }
-
-            if(this.player2){
-                if (this.player2.didCollide(fish)) {
+                // check if the player collided with the object
+                if (
+                    this.player.didCollide(fish) ||
+                    this.player2.didCollide(fish)
+                ) {
                     // remove the obstacle from the DOM
                     fish.element.remove();
                     // remove obstacle from the array
@@ -145,48 +150,41 @@ class Game {
                     // remove player's live by 1
                     this.score++;
                 }
+
+                // check if the obstacle is off the screen (at the left)
+                else if (fish.left < 0) {
+                    // congratulations to you, you avoided one obstacle and won 1 live
+                    this.lives--;
+
+                    // remove the obstacle from the HTML
+                    fish.element.remove();
+
+                    // remove the obstcle from the array of obstacles
+                    this.fishes.splice(i, 1);
+                }
             }
 
-            // check if the obstacle is off the screen (at the left)
-            else if (fish.left < 0) {
-                // congratulations to you, you avoided one obstacle and won 1 live
-                this.lives--;
-
-                // remove the obstacle from the HTML
-                fish.element.remove();
-
-                // remove the obstcle from the array of obstacles
-                this.fishes.splice(i, 1);
-            }
-        }
-
-        // Update obstacles
-        if (!this.fishes.length && !this.isPushingFish) {
-            /* This condition checks if there are no obstacles present in the game and if the game is not currently in the process of pushing a new obstacle. If both conditions are true, it means there are no obstacles on the screen, and it's time to push a new obstacle into the game. */
-            this.isPushingFish = true; /*  the game is currently in the process of adding a new obstacle. This is done to prevent multiple simultaneous attempts to push obstacles and maintain control over when the obstacles are added. */
-            setTimeout(() => {
-                this.fishes.push(new Fish(this.gameScreen));
-                this.isPushingFish = false;
-            }, 500); /* 0.5 seconds */
-        }
-        //------------------------------------------------------------------------------------------------------------------------------------------------------------------
-
-        for (let i = 0; i < this.hearts.length; i++) {
-            const heart = this.hearts[i];
-            heart.move();
-
-            // check if the player collided with the object
-            if (this.player.didCollide(heart)) {
-                // remove the obstacle from the DOM
-                heart.element.remove();
-                // remove obstacle from the array
-                this.hearts.splice(i, 1);
-                // remove player's live by 1
-                this.lives++;
+            // Update FISHES
+            if (!this.fishes.length && !this.isPushingFish) {
+                /* This condition checks if there are no obstacles present in the game and if the game is not currently in the process of pushing a new obstacle. If both conditions are true, it means there are no obstacles on the screen, and it's time to push a new obstacle into the game. */
+                this.isPushingFish = true; /*  the game is currently in the process of adding a new obstacle. This is done to prevent multiple simultaneous attempts to push obstacles and maintain control over when the obstacles are added. */
+                let timeFishes = this.randomTime(2500, 300);
+                setTimeout(() => {
+                    this.fishes.push(new Fish(this.gameScreen));
+                    this.isPushingFish = false;
+                }, timeFishes); /* 0.5 seconds */
             }
 
-            if(this.player2){
-                if (this.player2.didCollide(heart)) {
+            // HEARTS
+            for (let i = 0; i < this.hearts.length; i++) {
+                const heart = this.hearts[i];
+                heart.move();
+
+                // check if the player collided with the object
+                if (
+                    this.player.didCollide(heart) ||
+                    this.player2.didCollide(heart)
+                ) {
                     // remove the obstacle from the DOM
                     heart.element.remove();
                     // remove obstacle from the array
@@ -194,44 +192,36 @@ class Game {
                     // remove player's live by 1
                     this.lives++;
                 }
+
+                // check if the obstacle is off the screen (at the left)
+                else if (heart.left < 0) {
+                    // remove the obstacle from the HTML
+                    heart.element.remove();
+
+                    // remove the obstcle from the array of obstacles
+                    this.hearts.splice(i, 1);
+                }
             }
 
-            // check if the obstacle is off the screen (at the left)
-            else if (heart.left < 0) {
-                // remove the obstacle from the HTML
-                heart.element.remove();
-
-                // remove the obstcle from the array of obstacles
-                this.hearts.splice(i, 1);
-            }
-        }
-
-        // Update obstacles
-        if (!this.hearts.length && !this.isPushingHeart) {
-            this.isPushingHeart = true;
-            setTimeout(() => {
-                this.hearts.push(new Heart(this.gameScreen));
-                this.isPushingHeart = false;
-            }, 15000); /* 0.5 seconds */
-        }
-        //------------------------------------------------------------------------------------
-        // check for colision and if an obstacle is still on the screen
-        for (let i = 0; i < this.rocks.length; i++) {
-            const rock = this.rocks[i];
-            rock.move();
-
-            // check if the player collided with the rock
-            if (this.player.didCollide(rock)) {
-                // remove the rock from the DOM
-                rock.element.remove();
-                // remove rock from the array
-                this.rocks.splice(i, 1);
-                // remove player's live by 1
-                this.lives--;
+            // Update obstacles
+            if (!this.hearts.length && !this.isPushingHeart) {
+                this.isPushingHeart = true;
+                setTimeout(() => {
+                    this.hearts.push(new Heart(this.gameScreen));
+                    this.isPushingHeart = false;
+                }, 15000); /* 0.5 seconds */
             }
 
-            if(this.player2){
-                if (this.player2.didCollide(rock)) {
+            // ROCKS
+            for (let i = 0; i < this.rocks.length; i++) {
+                const rock = this.rocks[i];
+                rock.move();
+
+                // check if the player collided with the rock
+                if (
+                    this.player.didCollide(rock) ||
+                    this.player2.didCollide(rock)
+                ) {
                     // remove the rock from the DOM
                     rock.element.remove();
                     // remove rock from the array
@@ -239,96 +229,239 @@ class Game {
                     // remove player's live by 1
                     this.lives--;
                 }
+
+                // check if the obstacle is off the screen (at the left)
+                else if (rock.left < 0) {
+                    // congratulations to you, you avoided one obstacle and won 1 live
+                    //this.score++;
+
+                    // remove the obstacle from the HTML
+                    rock.element.remove();
+
+                    // remove the obstcle from the array of obstacles
+                    this.rocks.splice(i, 1);
+                }
             }
 
-            // check if the obstacle is off the screen (at the left)
-            else if (rock.left < 0) {
-            // congratulations to you, you avoided one obstacle and won 1 live
-            //this.score++;
-
-            // remove the obstacle from the HTML
-                rock.element.remove();
-
-                // remove the obstcle from the array of obstacles
-                this.rocks.splice(i, 1);
-            }
-        }
-
-        for (let i = 0; i < this.skeletons.length; i++) {
-            const skeleton = this.skeletons[i];
-            skeleton.move();
-
-            // check if the player collided with the fishSkeleton
-            if (this.player.didCollide(skeleton)) {
-                // remove the rock from the DOM
-                skeleton.element.remove();
-                // remove rock from the array
-                this.skeletons.splice(i, 1);
-                // remove player's live by 1
-                this.lives--;
+            if (!this.rocks.length && !this.isPushingRock) {
+                /* This condition checks if there are no obstacles present in the game and if the game is not currently in the process of pushing a new obstacle. If both conditions are true, it means there are no obstacles on the screen, and it's time to push a new obstacle into the game. */
+                this.isPushingRock = true; /*  the game is currently in the process of adding a new obstacle. This is done to prevent multiple simultaneous attempts to push obstacles and maintain control over when the obstacles are added. */
+                let timeRock = this.randomTime(2500, 300);
+                setTimeout(() => {
+                    this.rocks.push(
+                        new Rock(this.gameScreen, this.randomSpeed(6, 3))
+                    );
+                    this.isPushingRock = false;
+                }, timeRock); /* 0.5 seconds */
             }
 
-            if(this.player2){
-                if (this.player2.didCollide(skeleton)) {
+            // SKELETONS
+            for (let i = 0; i < this.skeletons.length; i++) {
+                const skeleton = this.skeletons[i];
+                skeleton.move();
+
+                // check if the player collided with the fishSkeleton
+                if (
+                    this.player.didCollide(skeleton) ||
+                    this.player2.didCollide(skeleton)
+                ) {
                     // remove the rock from the DOM
                     skeleton.element.remove();
                     // remove rock from the array
                     this.skeletons.splice(i, 1);
                     // remove player's live by 1
                     this.lives--;
-                } 
+                } else if (skeleton.left < 0) {
+                    // congratulations to you, you avoided one obstacle and won 1 live
+                    //this.score++;
+
+                    // remove the obstacle from the HTML
+                    skeleton.element.remove();
+
+                    // remove the obstcle from the array of obstacles
+                    this.skeletons.splice(i, 1);
+                }
             }
 
-            else if (skeleton.left < 0) {
-                // congratulations to you, you avoided one obstacle and won 1 live
-                //this.score++;
-
-                // remove the obstacle from the HTML
-                skeleton.element.remove();
-
-                // remove the obstcle from the array of obstacles
-                this.skeletons.splice(i, 1);
+            if (this.skeletons.length <= 3 && !this.isPushingSkeleton) {
+                /* This condition checks if there are no obstacles present in the game and if the game is not currently in the process of pushing a new obstacle. If both conditions are true, it means there are no obstacles on the screen, and it's time to push a new obstacle into the game. */
+                if (this.skeletons.length <= 3) {
+                    this.isPushingSkeleton = true; /*  the game is currently in the process of adding a new obstacle. This is done to prevent multiple simultaneous attempts to push obstacles and maintain control over when the obstacles are added. */
+                }
+                let timeSkeleton = this.randomTime(2500, 300);
+                setTimeout(() => {
+                    this.skeletons.push(
+                        new Skeleton(this.gameScreen, this.randomSpeed(6, 3))
+                    );
+                    this.isPushingSkeleton = false;
+                }, timeSkeleton); /* 0.5 seconds */
             }
-        }
 
-        // Update obstacles
+            // --------------------------------------------------------------------------------------------------------------------------
+        } else {
+            // Move player 1
+            this.player.move();
 
-        // Rocks
-        if (!this.rocks.length && !this.isPushingRock) {
-            /* This condition checks if there are no obstacles present in the game and if the game is not currently in the process of pushing a new obstacle. If both conditions are true, it means there are no obstacles on the screen, and it's time to push a new obstacle into the game. */
-            this.isPushingRock = true; /*  the game is currently in the process of adding a new obstacle. This is done to prevent multiple simultaneous attempts to push obstacles and maintain control over when the obstacles are added. */
-            let timeRock = this.randomTime(2500, 300);
-            setTimeout(() => {
-                this.rocks.push(
-                    new Rock(this.gameScreen, this.randomSpeed(6, 3)));
-                this.isPushingRock = false;
-            }, timeRock); /* 0.5 seconds */
-        }
+            // FISHES
+            for (let i = 0; i < this.fishes.length; i++) {
+                const fish = this.fishes[i];
+                fish.move();
 
-        // Fish skeletons
-        if (this.skeletons.length <= 3 && !this.isPushingSkeleton) {
-            /* This condition checks if there are no obstacles present in the game and if the game is not currently in the process of pushing a new obstacle. If both conditions are true, it means there are no obstacles on the screen, and it's time to push a new obstacle into the game. */
-            if (this.skeletons.length <= 3) {
-                this.isPushingSkeleton = true; /*  the game is currently in the process of adding a new obstacle. This is done to prevent multiple simultaneous attempts to push obstacles and maintain control over when the obstacles are added. */
+                // check if the player collided with the object
+                if (this.player.didCollide(fish)) {
+                    // remove the obstacle from the DOM
+                    fish.element.remove();
+                    // remove obstacle from the array
+                    this.fishes.splice(i, 1);
+                    // remove player's live by 1
+                    this.score++;
+                }
+
+                // check if the obstacle is off the screen (at the left)
+                else if (fish.left < 0) {
+                    // congratulations to you, you avoided one obstacle and won 1 live
+                    this.lives--;
+
+                    // remove the obstacle from the HTML
+                    fish.element.remove();
+
+                    // remove the obstcle from the array of obstacles
+                    this.fishes.splice(i, 1);
+                }
             }
-            let timeSkeleton = this.randomTime(2500, 300);
-            setTimeout(() => {
-                this.skeletons.push(
-                    new Skeleton(this.gameScreen, this.randomSpeed(6, 3))
-                );
-                this.isPushingSkeleton = false;
-            }, timeSkeleton); /* 0.5 seconds */
+
+            // Update FISHES
+            if (!this.fishes.length && !this.isPushingFish) {
+                /* This condition checks if there are no obstacles present in the game and if the game is not currently in the process of pushing a new obstacle. If both conditions are true, it means there are no obstacles on the screen, and it's time to push a new obstacle into the game. */
+                this.isPushingFish = true; /*  the game is currently in the process of adding a new obstacle. This is done to prevent multiple simultaneous attempts to push obstacles and maintain control over when the obstacles are added. */
+                setTimeout(() => {
+                    this.fishes.push(new Fish(this.gameScreen));
+                    this.isPushingFish = false;
+                }, 500); /* 0.5 seconds */
+            }
+
+            // HEARTS
+            for (let i = 0; i < this.hearts.length; i++) {
+                const heart = this.hearts[i];
+                heart.move();
+
+                // check if the player collided with the object
+                if (this.player.didCollide(heart)) {
+                    // remove the obstacle from the DOM
+                    heart.element.remove();
+                    // remove obstacle from the array
+                    this.hearts.splice(i, 1);
+                    // remove player's live by 1
+                    this.lives++;
+                }
+
+                // check if the obstacle is off the screen (at the left)
+                else if (heart.left < 0) {
+                    // remove the obstacle from the HTML
+                    heart.element.remove();
+
+                    // remove the obstcle from the array of obstacles
+                    this.hearts.splice(i, 1);
+                }
+            }
+
+            // Update obstacles
+            if (!this.hearts.length && !this.isPushingHeart) {
+                this.isPushingHeart = true;
+                setTimeout(() => {
+                    this.hearts.push(new Heart(this.gameScreen));
+                    this.isPushingHeart = false;
+                }, 15000); /* 0.5 seconds */
+            }
+
+            // ROCKS
+            for (let i = 0; i < this.rocks.length; i++) {
+                const rock = this.rocks[i];
+                rock.move();
+
+                // check if the player collided with the rock
+                if (this.player.didCollide(rock)) {
+                    // remove the rock from the DOM
+                    rock.element.remove();
+                    // remove rock from the array
+                    this.rocks.splice(i, 1);
+                    // remove player's live by 1
+                    this.lives--;
+                }
+
+                // check if the obstacle is off the screen (at the left)
+                else if (rock.left < 0) {
+                    // congratulations to you, you avoided one obstacle and won 1 live
+                    //this.score++;
+
+                    // remove the obstacle from the HTML
+                    rock.element.remove();
+
+                    // remove the obstcle from the array of obstacles
+                    this.rocks.splice(i, 1);
+                }
+            }
+
+            if (!this.rocks.length && !this.isPushingRock) {
+                /* This condition checks if there are no obstacles present in the game and if the game is not currently in the process of pushing a new obstacle. If both conditions are true, it means there are no obstacles on the screen, and it's time to push a new obstacle into the game. */
+                this.isPushingRock = true; /*  the game is currently in the process of adding a new obstacle. This is done to prevent multiple simultaneous attempts to push obstacles and maintain control over when the obstacles are added. */
+                let timeRock = this.randomTime(2500, 300);
+                setTimeout(() => {
+                    this.rocks.push(
+                        new Rock(this.gameScreen, this.randomSpeed(6, 3))
+                    );
+                    this.isPushingRock = false;
+                }, timeRock); /* 0.5 seconds */
+            }
+
+            // SKELETONS
+            for (let i = 0; i < this.skeletons.length; i++) {
+                const skeleton = this.skeletons[i];
+                skeleton.move();
+
+                // check if the player collided with the fishSkeleton
+                if (this.player.didCollide(skeleton)) {
+                    // remove the rock from the DOM
+                    skeleton.element.remove();
+                    // remove rock from the array
+                    this.skeletons.splice(i, 1);
+                    // remove player's live by 1
+                    this.lives--;
+                } else if (skeleton.left < 0) {
+                    // congratulations to you, you avoided one obstacle and won 1 live
+                    //this.score++;
+
+                    // remove the obstacle from the HTML
+                    skeleton.element.remove();
+
+                    // remove the obstcle from the array of obstacles
+                    this.skeletons.splice(i, 1);
+                }
+            }
+
+            if (this.skeletons.length <= 3 && !this.isPushingSkeleton) {
+                /* This condition checks if there are no obstacles present in the game and if the game is not currently in the process of pushing a new obstacle. If both conditions are true, it means there are no obstacles on the screen, and it's time to push a new obstacle into the game. */
+                if (this.skeletons.length <= 3) {
+                    this.isPushingSkeleton = true; /*  the game is currently in the process of adding a new obstacle. This is done to prevent multiple simultaneous attempts to push obstacles and maintain control over when the obstacles are added. */
+                }
+                let timeSkeleton = this.randomTime(2500, 300);
+                setTimeout(() => {
+                    this.skeletons.push(
+                        new Skeleton(this.gameScreen, this.randomSpeed(6, 3))
+                    );
+                    this.isPushingSkeleton = false;
+                }, timeSkeleton); /* 0.5 seconds */
+            }
         }
     }
 
     endGame() {
         // remove the player element from the DOM
         this.player.element.remove();
-        if(this.player2){
+        if (this.player2) {
             this.player2.element.remove();
         }
 
-        this.player.element.remove();
         this.fishes.forEach((fish) => {
             // remove from the HTML
             fish.element.remove();
