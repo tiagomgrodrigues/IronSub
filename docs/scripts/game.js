@@ -413,7 +413,7 @@ class Game {
                 if (!this.fishes.length && !this.isPushingFish) {
                     /* This condition checks if there are no obstacles present in the game and if the game is not currently in the process of pushing a new obstacle. If both conditions are true, it means there are no obstacles on the screen, and it's time to push a new obstacle into the game. */
                     this.isPushingFish = true; /*  the game is currently in the process of adding a new obstacle. This is done to prevent multiple simultaneous attempts to push obstacles and maintain control over when the obstacles are added. */
-                    let timeFishes = this.randomTime(2000, 200);
+                    let timeFishes = this.randomTime(3000, 300);
                     setTimeout(() => {
                         this.fishes.push(new Fish(this.gameScreen));
                         this.isPushingFish = false;
@@ -423,7 +423,7 @@ class Game {
                 if (this.fishes.length <= 2 && !this.isPushingFish) {
                     /* This condition checks if there are no obstacles present in the game and if the game is not currently in the process of pushing a new obstacle. If both conditions are true, it means there are no obstacles on the screen, and it's time to push a new obstacle into the game. */
                     this.isPushingFish = true; /*  the game is currently in the process of adding a new obstacle. This is done to prevent multiple simultaneous attempts to push obstacles and maintain control over when the obstacles are added. */
-                    let timeFishes = this.randomTime(2000, 200);
+                    let timeFishes = this.randomTime(3000, 300);
                     setTimeout(() => {
                         this.fishes.push(new Fish(this.gameScreen));
                         this.isPushingFish = false;
@@ -433,7 +433,7 @@ class Game {
                 if (this.fishes.length <= 3 && !this.isPushingFish) {
                     /* This condition checks if there are no obstacles present in the game and if the game is not currently in the process of pushing a new obstacle. If both conditions are true, it means there are no obstacles on the screen, and it's time to push a new obstacle into the game. */
                     this.isPushingFish = true; /*  the game is currently in the process of adding a new obstacle. This is done to prevent multiple simultaneous attempts to push obstacles and maintain control over when the obstacles are added. */
-                    let timeFishes = this.randomTime(2000, 200);
+                    let timeFishes = this.randomTime(3000, 300);
                     setTimeout(() => {
                         this.fishes.push(new Fish(this.gameScreen));
                         this.isPushingFish = false;
@@ -624,13 +624,13 @@ class Game {
             );
         } else if (this.score >= 10) {
             return (
-                Math.random() * (maxSpeed * 1.3 - minSpeed * 1.3 + 1) +
-                minSpeed * 1.3
+                Math.random() * (maxSpeed * 1.2 - minSpeed * 1.2 + 1) +
+                minSpeed * 1.2
             );
         } else if (this.score >= 20) {
             return (
-                Math.random() * (maxSpeed * 1.6 - minSpeed * 1.6 + 1) +
-                minSpeed * 1.6
+                Math.random() * (maxSpeed * 1.4 - minSpeed * 1.4 + 1) +
+                minSpeed * 1.4
             );
         } else if (this.score >= 30) {
             return (
