@@ -6,8 +6,8 @@ class Fish {
         this.left = this.gameScreen.offsetWidth;
         this.top =
             Math.floor(
-                Math.random() * (this.gameScreen.offsetHeight / 2 - 50)
-            ) + 150;
+                Math.random() * (this.gameScreen.offsetHeight / 2 + 50)
+            ) + 110;
         // + 150 means that is 150 from the top to the bottom
         this.width = 40;
         this.height = 40;

@@ -6,9 +6,8 @@ class Skeleton {
         this.left = this.gameScreen.offsetWidth;
         this.top =
             Math.floor(
-                Math.random() * (this.gameScreen.offsetHeight / 2 - 50)
-            ) +
-            this.gameScreen.offsetHeight / 2;
+                Math.random() * (this.gameScreen.offsetHeight / 2 + 60)
+            ) + 110;
         this.width = 30;
         this.height = 30;
 
