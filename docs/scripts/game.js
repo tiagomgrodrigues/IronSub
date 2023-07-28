@@ -10,13 +10,13 @@ class Game {
 
         // Sounds
         this.gameMusic = document.getElementById("gameAudio");
-        this.gameOverSound = new Audio("/docs/sounds/gameOver3.wav");
-        this.heartSound = new Audio("/docs/sounds/heartSound.wav");
-        this.fishSound = new Audio("/docs/sounds/fishSound2.wav");
-        this.levelSound = new Audio("/docs/sounds/levelSound.wav");
-        this.loseLifeSound = new Audio("/docs/sounds/loseLife.wav");
+        this.gameOverSound = new Audio("docs/sounds/gameOver3.wav");
+        this.heartSound = new Audio("docs/sounds/heartSound.wav");
+        this.fishSound = new Audio("docs/sounds/fishSound2.wav");
+        this.levelSound = new Audio("docs/sounds/levelSound.wav");
+        this.loseLifeSound = new Audio("docs/sounds/loseLife.wav");
         this.rocksSkeletonsSound = new Audio(
-            "/docs/sounds/rocksSkeletonsSound.wav"
+            "docs/sounds/rocksSkeletonsSound.wav"
         );
 
         // Volumes

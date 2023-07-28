@@ -3,7 +3,7 @@ window.onload = function () {
     const startMultiPlayerButton = document.getElementById("start-button-2");
     const restartButton = document.getElementById("restart-button");
 
-    this.initialSound = new Audio("/docs/sounds/initialSound.wav");
+    this.initialSound = new Audio("docs/sounds/initialSound.wav");
 
     let game;
 
