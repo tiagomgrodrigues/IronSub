@@ -35,7 +35,7 @@ body {
     position: relative;
     background-image: url(../images/sea.png);
     background-size: 100% 100%;
-    animation: slide-horizontal 5s steps(1300) infinite;
+    animation: slide-horizontal 10s linear infinite;
 }
 
 #status {
@@ -57,6 +57,10 @@ body {
 
 @keyframes slide-horizontal {
     /* animation of the screen in the horizontal plane */
+    /* animation of the screen in the horizontal plane */
+    0% {
+        background-position: 2000px 0;
+    }
     100% {
         background-position: -2000px 0;
     }
@@ -233,7 +237,7 @@ body {
 .controls-arrows {
     display: flex;
     flex-direction: column;
-    margin-top: 14%;
+    margin-top: 17%;
     margin-left: 28%;
     height: 300px;
     width: 20%;
@@ -245,7 +249,7 @@ body {
 .controls-objects {
     display: flex;
     flex-direction: column;
-    margin-top: 14%;
+    margin-top: 16%;
     margin-left: 0%;
     height: 300px;
     width: 25%;
